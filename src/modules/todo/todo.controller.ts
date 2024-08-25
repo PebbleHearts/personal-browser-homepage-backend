@@ -21,6 +21,7 @@ export class TodoController {
     return this.todoService.createTodo(createTodoDto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('projects')
   getTodoProjects(): Promise<TodoProject[]> {
     return this.todoService.getTodosProjects();

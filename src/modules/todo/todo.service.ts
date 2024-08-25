@@ -20,10 +20,21 @@ export class TodoService {
     return todos;
   }
 
-  createTodo(todoDetails: CreateTodoDto): Promise<Todo> {
+  async createTodo(todoDetails: CreateTodoDto): Promise<Todo> {
     const todo = new Todo();
     todo.title = todoDetails.title;
     todo.description = todoDetails.description;
+
+    const project = await this.todoProjectRepository.findOneBy({
+      id: todoDetails.projectId,
+    });
+
+    if (!project) {
+      throw new Error('TodoProject not found');
+    }
+
+    todo.project = project;
+
     return this.todoRepository.save(todo);
   }
 
