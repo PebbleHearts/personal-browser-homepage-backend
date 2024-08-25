@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards, Param } from '@nestjs/common';
 import { TodoService } from './todo.service';
 import { CreateTodoDto } from './dto/create-todo.dto';
 import { Todo } from './entities/todo.entitiy';
@@ -10,12 +10,19 @@ import { JwtAuthGuard } from '../user/jwt-guard';
 export class TodoController {
   constructor(private readonly todoService: TodoService) {}
 
-  @Get()
   @UseGuards(JwtAuthGuard)
+  @Get()
   getTodos(): Promise<Todo[]> {
     return this.todoService.getTodos();
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Get('project/:projectId')
+  getProjectTodos(@Param('projectId') projectId: number): Promise<Todo[]> {
+    return this.todoService.getProjectTodos(projectId);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Post()
   createTodo(@Body() createTodoDto: CreateTodoDto): Promise<Todo> {
     return this.todoService.createTodo(createTodoDto);
@@ -27,6 +34,7 @@ export class TodoController {
     return this.todoService.getTodosProjects();
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post('projects')
   createTodoProject(
     @Body() createTodoProjectDto: CreateTodoProjectDto,

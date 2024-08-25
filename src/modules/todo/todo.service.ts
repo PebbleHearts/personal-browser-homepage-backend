@@ -20,6 +20,13 @@ export class TodoService {
     return todos;
   }
 
+  async getProjectTodos(projectId: number): Promise<Todo[]> {
+    const todos = await this.todoRepository.find({
+      where: { project: { id: projectId } },
+    });
+    return todos;
+  }
+
   async createTodo(todoDetails: CreateTodoDto): Promise<Todo> {
     const todo = new Todo();
     todo.title = todoDetails.title;
